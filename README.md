@@ -48,7 +48,39 @@ jProfiler = function() {
   }
   
   return {
+    getContainer: function() {
+      return container;
+    },
+    
+    clear: function(name) {
+      if (lang.isString(name)) {
+        delete report[name];
+        delete stopwatches[name];
+      } else {
+        report = {};
+        stopwatches = {};
+      }
+    },
   
+  
+  
+  
+    unregisterObject : function (name //, recurse //) // {
+    
+      if (lang.isObject(container[name])) {
+        var object = container[name];
+        
+        for (var prop in object) {
+          if (typeof object[prop] == "function") {
+            this.unregisterFunction();
+          } else if (typeof object[prop] == "object" && recurse) {
+            this.unregisterObject(name + "." + prop, recurse);
+          }
+        }
+        
+        delete container[name];
+      }
+    }
   }
 }
 ```
